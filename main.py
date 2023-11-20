@@ -48,8 +48,10 @@ def display_pia_dashboard():
 
 def analyze_new_dependency():
     create_db_table()
-    dependency_name = click.prompt("Enter the Dependency Name")
+    dependency_name = click.prompt("Enter the Dependency Name:")
+    print("Searching for Privacy policy Document....")
     search_privacy_policy(dependency_name)
+    print("Analyzing the Privacy Policy Document....")
     #version = click.prompt("Enter the Version")
     #pia_score = click.prompt("Enter the PIA Score", type=int)
 
