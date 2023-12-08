@@ -1,0 +1,82 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIA Dashboard</title>
+</head>
+<body>
+    <h1>PIA Dashboard</h1>
+    
+    <form id="dependencyForm">
+        <label for="dependencyName">Dependency Name:</label>
+        <input type="text" id="dependencyName" name="dependencyName" required>
+        <button type="button" onclick="analyzeDependency()">Analyze</button>
+    </form>
+
+    <h2>Analyzed Dependencies</h2>
+    <table id="dependenciesTable">
+        <thead>
+            <tr>
+                <th>Dependency Name</th>
+                <th>Metrics</th>
+                <th>PIA Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Display analyzed dependencies here -->
+        </tbody>
+    </table>
+
+    <script>
+        function analyzeDependency() {
+            var dependencyName = document.getElementById('dependencyName').value;
+
+            fetch('/analyze_dependency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dependency_name: dependencyName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // Refresh the table
+                getPIADashboard();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function getPIADashboard() {
+            fetch('/pia_dashboard')
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing table rows
+                document.getElementById('dependenciesTable').getElementsByTagName('tbody')[0].innerHTML = "";
+
+                // Populate the table with analyzed dependencies
+                data.forEach(function (dependency) {
+                    var row = document.getElementById('dependenciesTable').getElementsByTagName('tbody')[0].insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    cell1.innerHTML = dependency['Dependency Name'];
+                    cell2.innerHTML = dependency['Metric 1'];
+                    cell3.innerHTML = dependency['PIA Score'];
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Initial load of the table
+        getPIADashboard();
+    </script>
+</body>
+</html>
