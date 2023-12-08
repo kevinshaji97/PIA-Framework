@@ -1,10 +1,12 @@
 import click
 from database import create_db_table, insert_dependency, retrieve_all_dependencies
 from scrapper import search_privacy_policy
+from model import analyze_privacy_policy
 
 @click.command()
-def main():
-    tool_name="""
+@click.option('--run-server', is_flag=True, help='Run the server')
+def main(run_server):
+    tool_name = """
  |  __ \    (_)                       |_   _|                          | |  
  | |__) | __ ___   ____ _  ___ _   _    | |  _ __ ___  _ __   __ _  ___| |_ 
  |  ___/ '__| \ \ / / _` |/ __| | | |   | | | '_ ` _ \| '_ \ / _` |/ __| __|
@@ -18,20 +20,32 @@ def main():
   / ____ \\__ \__ \  __/\__ \__ \ | | | | |  __/ | | | |_                   
  /_/    \_\___/___/\___||___/___/_| |_| |_|\___|_| |_|\__|                  
 
-Python based tool to conduct PIA of Third Party Dependencies                                                                         
+Python-based tool to conduct PIA of Third-Party Dependencies                                                                         
 """
     click.echo(tool_name)
-    click.echo("1. Display PIA Dashboard")
-    click.echo("2. Analyze a New Dependency")
 
-    choice = click.prompt("Select an option (1 or 2)", type=int)
+    while True:
+        click.echo("")
+        click.echo("1. Display PIA Dashboard")
+        click.echo("2. Analyze a New Dependency")
+        click.echo("3. Exit")
+        click.echo("")
 
-    if choice == 1:
-        display_pia_dashboard()
-    elif choice == 2:
-        analyze_new_dependency()
-    else:
-        click.echo("Invalid choice. Exiting.")
+        choice = click.prompt("Select an option (1, 2, or 3)", type=int)
+
+        if choice == 1:
+            display_pia_dashboard()
+        elif choice == 2:
+            analyze_new_dependency()
+        elif choice == 3:
+            click.echo("Exiting the program.")
+            break
+        else:
+            click.echo("Invalid choice. Please choose again.")
+
+        if run_server:
+            # Run the server logic here (replace with your actual server code)
+            click.echo("Running the server...")
 
 def display_pia_dashboard():
     create_db_table()
@@ -49,14 +63,14 @@ def display_pia_dashboard():
 def analyze_new_dependency():
     create_db_table()
     dependency_name = click.prompt("Enter the Dependency Name:")
-    print("Searching for Privacy policy Document....")
+    click.echo("Searching for Privacy policy Document....")
     search_privacy_policy(dependency_name)
-    print("Analyzing the Privacy Policy Document....")
-    #version = click.prompt("Enter the Version")
-    #pia_score = click.prompt("Enter the PIA Score", type=int)
+    click.echo("Analyzing the Privacy Policy Document....")
+    # version = click.prompt("Enter the Version")
+    # pia_score = click.prompt("Enter the PIA Score", type=int)
 
-    #insert_dependency(dependency_name, version)
-
+    # insert_dependency(dependency_name, version)
+    analyze_privacy_policy(dependency_name)
     click.echo("Dependency analyzed and saved successfully.")
 
 if __name__ == "__main__":
