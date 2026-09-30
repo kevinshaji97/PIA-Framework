@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pia-framework"
+version = "0.2.0"
+description = "LLM-backed Privacy Impact Assessment of third-party dependencies"
+readme = "README.md"
+authors = [{ name = "Kevin Shaji" }]
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1",
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "python-dotenv>=1.0",
+]
+
+[project.urls]
+Repository = "https://github.com/kevinshaji97/PIA-Framework"
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.40"]
+openai = ["openai>=1.40"]  # also used for Gemini, Ollama and other OpenAI-compatible APIs
+all = ["anthropic>=0.40", "openai>=1.40"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+pia = "pia.cli:cli"
+
+[tool.setuptools]
+packages = ["pia"]
